@@ -16,7 +16,10 @@
     <div class="content">
         <h1>MINE SWEEPER</h1>
 
-        <div class=help onclick="toggleHelpModal(this)">❓</div>
+        <div class="help">
+            <div class="help-btn" onclick="toggleHelpModal(this)">❓</div>
+            <div class="highscore-btn" onclick="toggleScoreModal(this)">🏆</div>
+        </div>
 
         <div class="features">
             <div class="life0 btn">❤️</div>
@@ -51,23 +54,35 @@
         <div class="lose-modal modal" onclick="getHomeSetting()">GAME OVER! <br> <span>RETURN TO MAIN MENU</span> </div>
     </div>
 
+
+    <div class="login">
+        <div class="login-container">
+            <input id="name" placeholder="ENTER USERNAME">
+            <div onclick="getUsername()">PLAY GAME</div>
+        </div>
+    </div>
+
     <div class=help-modal>
         How to play: <br>
-        Open a cell, you get a number. That number is the number of how many mines are surrounding it. <br>
-        To win, open all the cells withouth stepping on a mine.
-        stepped on a mine? YOU LOSE. <br>
+        Open a cell, you get a number. That number is the number of mines surrounding it. <br>
+        To win, open all the cells without stepping on a mine.
+        Stepped on a mine? YOU LOSE! <br>
         Levels: Beginner, Expert or Legend. <br>
         Caution: bigger table, more mines! <br>
         💣 - Mine. <br>
-        🏴 - Right click to place a flag. <br>
+        🏳️ - Right click to place a flag. <br>
         Stepped on a mine? <br>
         ❤️ - Lives left. <br>
         ☠️ - Lives lost. <br>
         Need help? <br>
         🌍 - Use a hint. <br>
-        🌐 - Hints left. <br>
+        🌐 - Hints used. <br>
         <br>
         ENTER CAVE - to start the game. <br>
+    </div>
+
+    <div class="highscore-modal">HIGHSCORE<br>
+        <div class="player-scores"></div>
     </div>
 
     <script src="main.js"></script>

@@ -20,21 +20,24 @@ var gGame = {
 };
 
 var gBoard;
+var gUsername;
 var gameDifficulty;
 var MINE = '💣';
-var FLAG = '&#127988';
+var FLAG = '🏳️';
 var LIFE = '❤️';
 var DEAD = '☠️';
 var HINT = '🌎';
 var NOHINT = '🌐';
 var isHint;
 var gameTime = 0;
+var gScore = 0;
 var gInterval;
 var hint1;
 var hint2;
 var hint3;
 var isFirstCell = true;
 var isHelpModalOn = false;
+var isScoreModalOn = false;
 var introMusic = new Audio('sound/entrace.wav');
 document.addEventListener("oncontextmenu", flagCell);
 
@@ -46,6 +49,7 @@ function init() {
     gGame.isOn = true;
     gGame.markedCount = 0;
     gGame.mineHits = 0;
+    gScore = 0;
     var timer = document.querySelector(".timer");
     timer.innerHTML = gameTime;
     hint1 = true;
@@ -58,9 +62,11 @@ function init() {
     document.querySelector(".hint1").innerHTML = '🌎';
     document.querySelector(".hint2").innerHTML = '🌎';
     isHelpModalOn = false;
+    isScoreModalOn = false;
     isHint = false;
-    document.querySelector('.flag-counter').innerHTML = '🏴 ' + gGame.markedCount
+    document.querySelector('.flag-counter').innerHTML = '🏳️ ' + gGame.markedCount
     document.querySelector('.mines-display').innerHTML = '💣 ' + gameDifficulty.mines;
+    document.querySelector('.player-scores').innerHTML = '';
     renderBoard(gBoard);
 }
 
@@ -193,7 +199,10 @@ function setGameTimer() {
     gameTime++;
     var time = document.querySelector(".timer");
     time.innerHTML = gameTime;
-    if (gameTime % 10 === 0) new Audio('sound/monster1.wav').play();
+    if (gameTime % 10 === 0) {
+        new Audio('sound/monster1.wav').play();
+        gScore -= 5;
+    }
 }
 
 function flagCell(event, i, j) {
@@ -210,7 +219,7 @@ function flagCell(event, i, j) {
             gGame.markedCount++;
         }
     }
-    document.querySelector('.flag-counter').innerHTML = '🏴 ' + gGame.markedCount;
+    document.querySelector('.flag-counter').innerHTML = '🏳️ ' + gGame.markedCount;
     renderBoard(gBoard);
 }
 
@@ -261,6 +270,7 @@ function getGameSettings() {
     document.querySelector(".win-modal").style.display = "none";
     document.querySelector(".lose-modal").style.display = "none";
     document.querySelector(".help-modal").style.display = "none";
+    document.querySelector(".highscore-modal").style.display = "none";
     document.querySelector(".modal-container").style.display = "none";
 }
 
@@ -281,12 +291,6 @@ function getHomeSetting() {
     document.querySelector(".modal-container").style.display = "none";
     document.querySelector(".win-modal").style.display = "none";
     document.querySelector(".lose-modal").style.display = "none";
-    document.getElementById("0").style.borderColor = "#d2d2caf0";
-    document.getElementById("0").style.color = "#d2d2caf0";
-    document.getElementById("1").style.borderColor = "#d2d2caf0";
-    document.getElementById("1").style.color = "#d2d2caf0";
-    document.getElementById("2").style.borderColor = "#d2d2caf0";
-    document.getElementById("2").style.color = "#d2d2caf0";
     document.querySelector(".flag-counter").style.display = "none";
     document.querySelector(".mines-display").style.display = "none";
 }
@@ -299,19 +303,23 @@ function onHintClick(e) {
         hintSound.play();
         isHint = true;
         hint1 = false;
+        gScore -= 5;
     }
     if (e.id === 'B' && hint2 === true) {
         document.querySelector(".hint1").innerHTML = '🌐';
         hintSound.play();
         isHint = true;
         hint2 = false;
+        gScore - 5;
     }
     if (e.id === 'C' && hint3 === true) {
         document.querySelector(".hint2").innerHTML = '🌐';
         hintSound.play();
         isHint = true;
         hint3 = false;
+        gScore -= 5;
     }
+    console.log(gScore);
 }
 
 function getHint(rowId, colId) {
@@ -346,6 +354,16 @@ function toggleHelpModal(e) {
     }
 }
 
+function toggleScoreModal(e) {
+    if (!isScoreModalOn) {
+        document.querySelector(".highscore-modal").style.display = "block";
+        isScoreModalOn = true;
+    } else {
+        document.querySelector(".highscore-modal").style.display = "none";
+        isScoreModalOn = false;
+    }
+}
+
 function checkGameOver() {
     if (!gGame.isOn) return;
     var shownCount = 0;
@@ -364,9 +382,63 @@ function checkGameOver() {
     }
 }
 
+function getUsername () {
+    gUsername = document.getElementById("name").value;
+    document.querySelector('.login').style.display = 'none';
+}
+
+function getHighScore() {
+    var score = gScore;
+    var scores;
+    if (localStorage.getItem('scores') === null) {
+        scores = [];
+    } else {
+        scores = JSON.parse(localStorage.getItem('scores'));
+    }
+
+    scores.push(score);
+
+    localStorage.setItem('scores', JSON.stringify(scores));
+
+    scores.sort(function (score1, score2) {
+        return score2 - score1;
+    });
+
+    var currScore;
+    for (var i = 0; i < 10; i++) {
+        currScore = scores[i];
+        if (!currScore) return;
+        else {
+            document.querySelector('.player-scores').innerHTML += gUsername + '     ' + currScore + `<br>`;
+        }
+    }
+
+}
+
+function getGameScore() {
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard.length; j++) {
+            var cell = gBoard[i][j];
+            if (cell.isShown) {
+                if (!cell.isMine) {
+                    gScore += 2;
+                }
+                else if (cell.isMine) {
+                    gScore -= 3;
+                }
+            }
+            if (cell.isMarked && cell.isMine) {
+                gScore += 10;
+            }
+        }
+    }
+    getHighScore();
+}
+
 function gameOver() {
     clearInterval(gInterval);
     gGame.isOn = false;
+    getGameScore();
     new Audio('sound/gameOver.mp3').play();
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard.length; j++) {
@@ -390,6 +462,8 @@ function gameOver() {
 function gameWon() {
     clearInterval(gInterval);
     gGame.isOn = false;
+    gScore += 45;
+    getGameScore();
     new Audio('sound/victory.mp3').play();
     renderBoard(gBoard);
     setTimeout(function () {
