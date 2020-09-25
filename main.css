@@ -54,19 +54,21 @@ td {
 }
 
 .login {
-    height: 360px;
-    width: 300px;
-    top:0;
-    margin: auto;
-    text-align: center;
-    color: #d2d2caf0;
-    background-image: url(img/wall.jpg);
-    background-size: contain;
-    position: absolute;
-    margin-top:120px;
-    top: 0; left: 0; bottom: 0; right: 0;
-    display: block;
-
+        height: 471px;
+        width: 260px;
+        top: 0;
+        margin: auto;
+        text-align: center;
+        color: #d2d2caf0;
+        background-image: url(img/wall.jpg);
+        background-size: contain;
+        position: absolute;
+        margin-top: 120px;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: block;
 }
 
 .login-container {
@@ -80,6 +82,17 @@ td {
 .login-container:hover {
     color: yellow;
 }
+
+#name {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    padding: 4px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 900;
+    background-color:  #d2d2caf0;
+}
+
 
 .start-menu {
     height: 100px;
@@ -238,6 +251,7 @@ right: 40px;
     margin: auto;
     text-align:center;
     padding-top: 35px;
+    word-spacing: 30px;
 }
 
 .modal-container {

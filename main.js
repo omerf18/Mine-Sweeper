@@ -385,6 +385,7 @@ function checkGameOver() {
 function getUsername () {
     gUsername = document.getElementById("name").value;
     document.querySelector('.login').style.display = 'none';
+    introMusic.play();
 }
 
 function getHighScore() {
@@ -409,7 +410,7 @@ function getHighScore() {
         currScore = scores[i];
         if (!currScore) return;
         else {
-            document.querySelector('.player-scores').innerHTML += gUsername + '     ' + currScore + `<br>`;
+            document.querySelector('.player-scores').innerHTML += gUsername + ' ' + currScore + `<br>`;
         }
     }
 
