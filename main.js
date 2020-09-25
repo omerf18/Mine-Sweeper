@@ -66,7 +66,6 @@ function init() {
     isHint = false;
     document.querySelector('.flag-counter').innerHTML = '🏳️ ' + gGame.markedCount
     document.querySelector('.mines-display').innerHTML = '💣 ' + gameDifficulty.mines;
-    document.querySelector('.player-scores').innerHTML = '';
     renderBoard(gBoard);
 }
 
@@ -356,6 +355,7 @@ function toggleHelpModal(e) {
 
 function toggleScoreModal(e) {
     if (!isScoreModalOn) {
+        getHighScore(false);
         document.querySelector(".highscore-modal").style.display = "block";
         isScoreModalOn = true;
     } else {
@@ -382,38 +382,48 @@ function checkGameOver() {
     }
 }
 
-function getUsername () {
+function getUsername() {
     gUsername = document.getElementById("name").value;
     document.querySelector('.login').style.display = 'none';
     introMusic.play();
 }
 
-function getHighScore() {
-    var score = gScore;
-    var scores;
-    if (localStorage.getItem('scores') === null) {
-        scores = [];
-    } else {
-        scores = JSON.parse(localStorage.getItem('scores'));
+function getHighScore(newScore) {
+    if (!gUsername) gUsername = 'GUEST';
+    var results = [];
+    var res = {
+        name: gUsername,
+        score: gScore
     }
 
-    scores.push(score);
+    if (localStorage.getItem('results') === null) {
+        results = [];
+    } else {
+        results = JSON.parse(localStorage.getItem('results'));
+    }
 
-    localStorage.setItem('scores', JSON.stringify(scores));
+    if (newScore) {
+        results.push(res);
 
-    scores.sort(function (score1, score2) {
-        return score2 - score1;
+    }
+
+    results.sort(function (res1, res2) {
+        return res2.score - res1.score;
     });
 
     var currScore;
+    var highScores = [];
+    document.querySelector('.player-scores').innerHTML = '';
     for (var i = 0; i < 10; i++) {
-        currScore = scores[i];
-        if (!currScore) return;
+        currScore = results[i];
+        if (!currScore) break;
         else {
-            document.querySelector('.player-scores').innerHTML += gUsername + ' ' + currScore + `<br>`;
+            highScores.push(currScore);
+            document.querySelector('.player-scores').innerHTML += (i+1) + ' ' + results[i].name + ' ' + results[i].score + `<br>`;
         }
     }
-
+    localStorage.removeItem('results');
+    localStorage.setItem('results', JSON.stringify(highScores));
 }
 
 function getGameScore() {
@@ -433,13 +443,13 @@ function getGameScore() {
             }
         }
     }
-    getHighScore();
 }
 
 function gameOver() {
     clearInterval(gInterval);
     gGame.isOn = false;
     getGameScore();
+    getHighScore(true);
     new Audio('sound/gameOver.mp3').play();
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard.length; j++) {
@@ -455,6 +465,7 @@ function gameOver() {
     renderBoard(gBoard);
     setTimeout(function () {
         document.querySelector(".modal-container").style.display = "block";
+        document.querySelector("#lose-score").innerHTML = "SCORE: " + gScore;
         document.querySelector(".lose-modal").style.display = "block";
         introMusic.play();
     }, 2500);
@@ -465,10 +476,12 @@ function gameWon() {
     gGame.isOn = false;
     gScore += 45;
     getGameScore();
+    getHighScore(true);
     new Audio('sound/victory.mp3').play();
     renderBoard(gBoard);
     setTimeout(function () {
         document.querySelector(".modal-container").style.display = "block";
+        document.querySelector("#win-score").innerHTML = "SCORE: " + gScore;
         document.querySelector(".win-modal").style.display = "block";
     }, 2000);
 

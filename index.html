@@ -50,8 +50,14 @@
     </div>
 
     <div class="modal-container">
-        <div class="win-modal modal" onclick="getHomeSetting()">YOU WIN! <br> <span>RETURN TO MAIN MENU</span> </div>
-        <div class="lose-modal modal" onclick="getHomeSetting()">GAME OVER! <br> <span>RETURN TO MAIN MENU</span> </div>
+        <div class="win-modal modal" onclick="getHomeSetting()">YOU WIN! <br> 
+            <span>RETURN TO MAIN MENU <br> </span> 
+            <span id="win-score"></span>
+        </div>
+        <div class="lose-modal modal" onclick="getHomeSetting()">GAME OVER! <br> 
+            <span>RETURN TO MAIN MENU <br> </span>
+        <span id="lose-score"></span>
+        </div>
     </div>
 
 
@@ -81,7 +87,7 @@
         ENTER CAVE - to start the game. <br>
     </div>
 
-    <div class="highscore-modal">HIGHSCORE<br>
+    <div class="highscore-modal"> <span id="highscore-title">HIGHSCORES</span> <br>
         <div class="player-scores"></div>
     </div>
 

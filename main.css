@@ -237,10 +237,14 @@ font-size: 30px;
 position: absolute;
 top: 0;
 margin-top: 135px;
-text-align: center;
 margin:auto;
 margin-top: 128px;
 right: 40px;
+}
+
+#highscore-title {
+    padding-left: 65px;
+    font-size: 33px;
 }
 
 .player-scores{
@@ -249,9 +253,9 @@ right: 40px;
     color:#d2d2caf0;
     font-size: 20px; 
     margin: auto;
-    text-align:center;
     padding-top: 35px;
     word-spacing: 30px;
+    padding-left: 100px;
 }
 
 .modal-container {
@@ -264,7 +268,7 @@ right: 40px;
 }
 
 .modal {
-    height: 120px;
+    height: 255px;
     max-width: 250px;
     background-image: url(img/wall.jpg);
     background-size: contain;
@@ -276,7 +280,7 @@ right: 40px;
     cursor: pointer;
     margin:auto;
     text-align: center;
-    margin-top:130px;
+    margin-top:128px;
     animation: fadeIn ease 8s;
     -webkit-animation: fadeIn ease 8s;
     -moz-animation: fadeIn ease 8s;
